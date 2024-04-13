@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "user/ordersystem";
+option java_multiple_files = true;
+
+package distributedOrderingSystem;
+
+service OrderManagement {
+    rpc getOrderServerStreaming(OrderRequest) returns (stream OrderResponse);
+    rpc getOrderBidirectional(stream OrderRequest) returns (stream OrderResponse);
+}
+
+message OrderRequest {
+    string items = 1;
+}
+
+message OrderResponse {
+    string itemName = 1;
+    string timeStamp = 2;
+}
