@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"time"
+	"strconv"
 	handler "user/ordersystem/src/handler"
 	pb "user/ordersystem/src/proto"
 
@@ -27,7 +28,7 @@ func (s *server) GetOrderBidirectional(stream pb.OrderManagement_GetOrderBidirec
 		found, orders := handler.FindOrderByItemName(req.Items)
 		if found {
 			for _, order := range orders {
-				if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: time.Now().String()}); err != nil {
+				if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
 					return err
 				}
 			}
@@ -39,7 +40,7 @@ func (s *server) GetOrderServerStreaming(req *pb.OrderRequest, stream pb.OrderMa
 	found, orders := handler.FindOrderByItemName(req.Items)
 	if found {
 		for _, order := range orders {
-			if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: time.Now().String()}); err != nil {
+			if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
 				return err
 			}
 		}

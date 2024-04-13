@@ -14,19 +14,18 @@ import (
 
 func GetInputBidirectional() []string {
 	var orders []string
-
-	fmt.Println("Enter orders (one per line) for Bidirectional streaming, press 'Enter' twice to finish:")
+	fmt.Println("Enter orders for Bidirectional streaming:")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		text := scanner.Text()
-		if text == "" { // Empty line indicates end of input
+		if text == "" {
 			break
 		}
 		orders = append(orders, text)
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("Error reading standard input: %v", err)
+		log.Fatalf("Error reading input: %v", err)
 	}
 
 	return orders
@@ -37,22 +36,21 @@ func GetInputServerStreaming() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("Error reading standard input: %v", err)
+		log.Fatalf("Error reading input: %v", err)
 	}
 	return scanner.Text()
 }
 
 func BidirectionalStreaming(client pb.OrderManagementClient) {
-	// orderRequests := []*pb.OrderRequest{{Items: "apple"}, {Items: "banana"}, {Items: "orange"}}
 	orderRequests := GetInputBidirectional()
 	getOrderClient, err := client.GetOrderBidirectional(context.Background())
 	if err != nil {
-		log.Fatalf("%v.GetOrderBidirectional(_) = _, %v", client, err)
+		log.Fatalf("Error calling GetOrderBidirectional: %v", err)
 	}
 	for _, orderRequest := range orderRequests {
 		request := &pb.OrderRequest{Items: orderRequest}
 		if err := getOrderClient.Send(request); err != nil {
-			log.Fatalf("%v.Send(%v) = %v", getOrderClient, orderRequest, err)
+			log.Fatalf("Error sending request: %v", err)
 		}
 	}
 
@@ -62,18 +60,17 @@ func BidirectionalStreaming(client pb.OrderManagementClient) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("%v.GetOrderBidirectional(_) = _, %v", client, err)
+			log.Fatalf("Error receiving response: %v", err)
 		}
 		log.Printf("Order: %s", orderResponse)
 	}
 }
 
 func ServerStreaming(client pb.OrderManagementClient) {
-	// orderRequest := &pb.OrderRequest{Items: "apple"}
 	orderRequest := &pb.OrderRequest{Items: GetInputServerStreaming()}
 	getOrderClient, err := client.GetOrderServerStreaming(context.Background(), orderRequest)
 	if err != nil {
-		log.Fatalf("%v.GetOrderServerStreaming(_) = _, %v", client, err)
+		log.Fatalf("Error calling GetOrderServerStreaming: %v", err)
 	}
 	for {
 		orderResponse, err := getOrderClient.Recv()
@@ -81,7 +78,7 @@ func ServerStreaming(client pb.OrderManagementClient) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("%v.GetOrderServerStreaming(_) = _, %v", client, err)
+			log.Fatalf("Error receiving response: %v", err)
 		}
 		log.Printf("Order: %s", orderResponse)
 	}
@@ -94,6 +91,7 @@ func main() {
 	}
 	defer conn.Close()
 	client := pb.NewOrderManagementClient(conn)
+	fmt.Println("Enter inputs with space, press 'Enter' twice to finish")
 	ServerStreaming(client)
 	BidirectionalStreaming(client)
 }
