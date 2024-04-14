@@ -14,7 +14,7 @@ PROTOC := protoc
 
 PROTOC_PLUGIN_GO := $(shell which protoc-gen-go)
 
-OUT_GO_DIR := $(OUT_DIR)/go_bin
+OUT_GO_DIR := $(OUT_DIR)
 
 .DEFAULT_GOAL := all
 
@@ -33,7 +33,7 @@ go_build:
 # 	@mkdir -p $(OUT_DIR)
 
 $(OUT_GO_DIR): $(wildcard $(SRC_DIR)/*/) $(wildcard $(SRC_DIR)/*/*/)
-	@mkdir -p $(OUT_DIR)/go_bin
+	@mkdir -p $(OUT_DIR)
 	@$(GO_BUILD) -o $@ $<
 
 # proto_compile: $(PROTO_OUT_DIR)
