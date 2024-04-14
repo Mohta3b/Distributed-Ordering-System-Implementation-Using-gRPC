@@ -7,14 +7,16 @@ import (
 	"io"
 	"log"
 	"os"
+	cls "user/ordersystem/pkg"
 	pb "user/ordersystem/src/proto"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func GetInputBidirectional() []string {
 	var orders []string
-	fmt.Println("Enter orders for Bidirectional streaming:")
+	fmt.Println("Enter orders for Bidirectional Streaming:")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		text := scanner.Text()
@@ -84,14 +86,49 @@ func ServerStreaming(client pb.OrderManagementClient) {
 	}
 }
 
-func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+func ConnectToServer() (pb.OrderManagementClient, *grpc.ClientConn) {
+	// conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("Failed to connect: %v", err)
 	}
-	defer conn.Close()
+	// defer conn.Close()
 	client := pb.NewOrderManagementClient(conn)
-	fmt.Println("Enter inputs with space, press 'Enter' twice to finish")
-	ServerStreaming(client)
-	BidirectionalStreaming(client)
+	return client, conn
+}
+
+func RunClient(client pb.OrderManagementClient) {
+	exit := false
+	for {
+		if exit {
+			break
+		}
+
+		cls.CallClear()
+
+		fmt.Println("Select Communication Pattern:\n1. Server Streaming\n2. Bidirectional Streaming\n3. Exit")
+		var input string
+		fmt.Scanln(&input)
+		switch input {
+		case "1":
+			ServerStreaming(client)
+		case "2":
+			BidirectionalStreaming(client)
+		case "3":
+			exit = true
+		default:
+			fmt.Println("Invalid Input!")
+		}
+		fmt.Println("Press Enter to continue...")
+		fmt.Scanln()
+	}
+}
+
+func main() {
+
+	client, connection := ConnectToServer()
+
+	RunClient(client)
+
+	connection.Close()
 }

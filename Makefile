@@ -4,6 +4,8 @@ OUT_DIR := bin
 
 PROTO_DIR := $(SRC_DIR)/proto
 
+PACKAGE_DIR = pkg
+
 PROTO_OUT_DIR := $(OUT_DIR)/proto_bin
 
 GO_BUILD := go build
@@ -22,6 +24,7 @@ all: proto_compile go_build
 
 go_build:
 	@mkdir -p $(OUT_GO_DIR)
+	@$(GO_BUILD) $(PACKAGE_DIR)/*.go
 	@for dir in $(wildcard $(SRC_DIR)/*); do \
 		$(GO_BUILD) -o $(OUT_GO_DIR)/$$(basename $$dir) $$dir/*.go; \
 	done
