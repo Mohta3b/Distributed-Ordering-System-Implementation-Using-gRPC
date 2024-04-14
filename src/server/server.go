@@ -18,23 +18,28 @@ type server struct {
 
 func (s *server) GetOrderBidirectional(stream pb.OrderManagement_GetOrderBidirectionalServer) error {
 	for {
-		req, err := stream.Recv()
-		if err == io.EOF {
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		found, orders := handler.FindOrderByItemName(req.Items)
-		if found {
-			for _, order := range orders {
-				if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
-					return err
-				}
+			req, err := stream.Recv()
+			if err == io.EOF {
+					return nil
 			}
-		}
+			if err != nil {
+					return err
+			}
+			found, orders := handler.FindOrderByItemName(req.Items)
+			if found {
+					for _, order := range orders {
+							if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+									return err
+							}
+					}
+			} else {
+					if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+							return err
+					}
+			}
 	}
 }
+
 
 func (s *server) GetOrderServerStreaming(req *pb.OrderRequest, stream pb.OrderManagement_GetOrderServerStreamingServer) error {
 	found, orders := handler.FindOrderByItemName(req.Items)
@@ -42,9 +47,13 @@ func (s *server) GetOrderServerStreaming(req *pb.OrderRequest, stream pb.OrderMa
 		for _, order := range orders {
 			if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
 				return err
-			}
+			} 
 		}
-	}
+	} else {
+		if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+				return err
+		}
+}
 	return nil
 }
 
