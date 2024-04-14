@@ -87,12 +87,10 @@ func ServerStreaming(client pb.OrderManagementClient) {
 }
 
 func ConnectToServer() (pb.OrderManagementClient, *grpc.ClientConn) {
-	// conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
-	// defer conn.Close()
 	client := pb.NewOrderManagementClient(conn)
 	return client, conn
 }
