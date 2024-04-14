@@ -15,7 +15,7 @@ These project requires the following tools to be installed on your system:
 1. Run the following command to build the necessary files:
 
    ```bash
-   go build pkg/*.go
+   go build pkg/cls.go
    ```
 2. Run the Server:
 
@@ -44,13 +44,13 @@ These project requires the following tools to be installed on your system:
 
 ## gRPC Communication Modes
 In gRPC, there are four types of communication modes that can be used to define the interaction between the client and the server:
-* Unary RPC: In a unary RPC, the client sends a single request to the server and receives a single response from the server. This is the simplest form of RPC and is similar to a traditional remote procedure call.
+* `Unary RPC:` In a unary RPC, the client sends a single request to the server and receives a single response from the server. This is the simplest form of RPC and is similar to a traditional remote procedure call.
 ![Unary RPC](./Documents/bb5ced3a-image1.png)
-* Server Streaming RPC: In a server streaming RPC, the client sends a single request to the server, and the server responds with a stream of messages asynchronously. This pattern is useful for scenarios where the server needs to send multiple messages to the client in response to a single request. For example, retrieving a list of items that match a search query.
+* `Server Streaming RPC:` In a server streaming RPC, the client sends a single request to the server, and the server responds with a stream of messages asynchronously. This pattern is useful for scenarios where the server needs to send multiple messages to the client in response to a single request. For example, retrieving a list of items that match a search query.
 ![Server Streaming RPC](./Documents/c6826dd4-image3.png)
-* Client Streaming RPC: In a client streaming RPC, the client sends a stream of messages to the server, and the server responds with a single response. This pattern is useful for scenarios where the client needs to send a large amount of data to the server. For example, uploading a file or sending a batch of requests.
+* `Client Streaming RPC:` In a client streaming RPC, the client sends a stream of messages to the server, and the server responds with a single response. This pattern is useful for scenarios where the client needs to send a large amount of data to the server. For example, uploading a file or sending a batch of requests.
 ![Client Streaming RPC](./Documents/74a4c5f9-image4.png)
-* Bidirectional Streaming RPC: In a bidirectional streaming RPC, both the client and the server send a stream of messages to each other asynchronously. This pattern is useful for scenarios where both the client and the server need to send and receive multiple messages during the lifetime of the RPC. This pattern is wildly used in chat applications, real-time data processing, and collaborative editing.
+* `Bidirectional Streaming RPC:` In a bidirectional streaming RPC, both the client and the server send a stream of messages to each other asynchronously. This pattern is useful for scenarios where both the client and the server need to send and receive multiple messages during the lifetime of the RPC. This pattern is wildly used in chat applications, real-time data processing, and collaborative editing.
 ![Bidirectional RPC](./Documents/414e501c-image5.png)
 
 
