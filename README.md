@@ -60,8 +60,11 @@ When the server runs successfully, you'll see this message:
 
 When the client connects successfully, you'll be presented with a list of patterns to choose from for testing.
 * When selecting `server streaming` mode and executing, the client will display the results returned from the server on the screen.
+
 ![server streaming](./Documents/server_stream_res.png)
-* When selecting bidirectional streaming mode and running a test by pressing enter twice, the client will receive and print the results returned from the server. If no results are found, the server will return the message No orders found for the specified item as the itemName.
+
+* When selecting `bidirectional streaming` mode and running a test by pressing enter twice, the client will receive and print the results returned from the server. If no results are found, the server will return the message No orders found for the specified item as the itemName.
+
 ![bidirectional streaming](./Documents/bidirectional_stream_res.png)
 
 
