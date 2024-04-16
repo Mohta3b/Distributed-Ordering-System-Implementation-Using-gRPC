@@ -20,7 +20,7 @@ OUT_GO_DIR := $(OUT_DIR)
 
 .PHONY: all clean
 
-all: proto_compile go_build
+all: go_build
 
 go_build:
 	@mkdir -p $(OUT_GO_DIR)

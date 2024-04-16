@@ -56,6 +56,7 @@ func BidirectionalStreaming(client pb.OrderManagementClient) {
 		}
 	}
 
+	done_count := 0
 	for {
 		orderResponse, err := getOrderClient.Recv()
 		if err == io.EOF {
@@ -63,6 +64,12 @@ func BidirectionalStreaming(client pb.OrderManagementClient) {
 		}
 		if err != nil {
 			log.Fatalf("Error receiving response: %v", err)
+		}
+		if orderResponse.ItemName == "Server: Done!" {
+			done_count++
+			if done_count == len(orderRequests){
+				break
+			}
 		}
 		log.Printf("Order: %s", orderResponse)
 	}
@@ -98,9 +105,6 @@ func ConnectToServer() (pb.OrderManagementClient, *grpc.ClientConn) {
 func RunClient(client pb.OrderManagementClient) {
 	exit := false
 	for {
-		if exit {
-			break
-		}
 
 		cls.CallClear()
 
@@ -117,6 +121,11 @@ func RunClient(client pb.OrderManagementClient) {
 		default:
 			fmt.Println("Invalid Input!")
 		}
+
+		if exit {
+			break
+		}
+
 		fmt.Println("Press Enter to continue...")
 		fmt.Scanln()
 	}
