@@ -337,8 +337,22 @@ OrderResponse: This message type represents a response sent by the server. It co
 itemName: A field of type string representing the name of an item.
 timeStamp: A field of type string representing a timestamp. The field numbers for itemName and timeStamp are 1 and 2, respectively.  
 n Protocol Buffers (protobuf), the numbers associated with message fields and service methods are called field numbers or tag numbers. These numbers serve several purposes: 
-- Uniquely Identifying Fields:
-- Forward and Backward Compatibility:
-- Efficient Encoding:
+- Uniquely Identifying Fields
+- Forward and Backward Compatibility
+- Efficient Encoding
 - compact binary format
 These field numbers are used during message serialization and deserialization to identify and parse the fields correctly. They play a crucial role in ensuring the interoperability and efficiency of communication between different systems using Protocol Buffers.
+
+# Group Members & Contribution
+- [Nesa Abbasi](https://github.com/Nesabbasi)
+	- Implementing the server & client side of the project
+	- Participating in writing code documentation
+- [Ava Mirmohammadmahdi](https://github.com/avamirm)
+	- Implementing the server & client side of the project
+	- Writing proto file
+	- Participating in writing code documentation
+- [Amir Ali Vahidi](https://github.com/Mohta3b)
+	- Handling the project structure
+	- Modify the server & client side of the project
+	- Writing README.md file
+
