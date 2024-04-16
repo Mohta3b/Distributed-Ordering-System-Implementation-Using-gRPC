@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 	"time"
-	"strconv"
+	// "strconv"
 	handler "user/ordersystem/src/handler"
 	pb "user/ordersystem/src/proto"
 
@@ -28,15 +28,18 @@ func (s *server) GetOrderBidirectional(stream pb.OrderManagement_GetOrderBidirec
 			found, orders := handler.FindOrderByItemName(req.Items)
 			if found {
 					for _, order := range orders {
-							if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+							if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: time.Now().String()}); err != nil {
 									return err
 							}
 					}
 			} else {
-					if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+					if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: time.Now().String()}); err != nil {
 							return err
 					}
 			}
+			if err := stream.Send(&pb.OrderResponse{ItemName: "Server: Done!", TimeStamp: time.Now().String()}); err != nil {
+				return err
+		}
 	}
 }
 
@@ -45,12 +48,12 @@ func (s *server) GetOrderServerStreaming(req *pb.OrderRequest, stream pb.OrderMa
 	found, orders := handler.FindOrderByItemName(req.Items)
 	if found {
 		for _, order := range orders {
-			if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+			if err := stream.Send(&pb.OrderResponse{ItemName: order, TimeStamp: time.Now().String()}); err != nil {
 				return err
 			} 
 		}
 	} else {
-		if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: strconv.Itoa(time.Now().Second())}); err != nil {
+		if err := stream.Send(&pb.OrderResponse{ItemName: "No orders found for the specified item", TimeStamp: time.Now().String()}); err != nil {
 				return err
 		}
 }
